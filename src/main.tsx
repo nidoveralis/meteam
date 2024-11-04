@@ -5,9 +5,9 @@ import { createRoot } from "react-dom/client";
 
 import Login from "./pages/login/login.jsx";
 
-import store from "./redux/reducer/store.ts";
+import store from "./redux/reducer/store.js";
 
-import "./index.css";
+import "./scss/index.scss";
 
 
 // import App from './App.jsx'

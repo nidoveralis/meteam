@@ -22,7 +22,7 @@
     letter-spacing: 0.03em;
   }
 
-  input {
+  &__input {
     width: 100%;
     border: 1px solid #E4E4E7;
     padding: 15px;
@@ -32,11 +32,16 @@
     font-size: 14px;
     letter-spacing: 0.025em;
     color: #9FA6B2;
+
+    &_error {
+      border-color: #F87171;
+    }
   }
 
-  input:focus {
+  &__input:focus {
     outline-color: #5C73DB;
   }
+
 }
 
 .login__password {

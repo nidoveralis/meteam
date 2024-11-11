@@ -3,17 +3,51 @@ import styles from './login.module.scss';
 import EyeOff from '../../assets/icons/eye-off.svg';
 import Logo from '../../assets/icons/logodark.svg';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { actionRegisterUser } from '../../redux/action/user/actionUser';
+import { AppDispatch } from '../../redux/reducer/store';
 
 
 const Login = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const [isVisiblePassword, setIsVisiblePassword] = useState<boolean>(false);
   const [isPassword, setIsPassword] = useState<string>('');
-  // const [isRegister, setIsRegister] = useState<boolean>(false);
-  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [isPasswordCopy, setIsPasswordCopy] = useState<string>('');
+  const [isMail, setIsMail] = useState<string>('');
+  const [isPhone, setIsPhone] = useState<string>('');
+
+  // const [isResetPassword, setIsResetPassword] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
   const [isCheckbox, setIsCheckbox] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+
+
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>, state: (state: string) => void) => {
+    state(e.target.value);
+  };
 
   const handleChangeInputPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsPassword(e.target.value); console.log(e.target.value);
+
+    const {name, value} = e.target;
+
+    if(!isLogin) {
+      if(name === 'parolcopy') {
+        setIsPasswordCopy(value);
+      } else {
+        setIsPassword(value);
+      }
+      if(isPassword !== isPasswordCopy) {
+        console.log('err', isError);
+        setIsError(true);
+      }
+    } else {
+      setIsPassword(value);
+    }
+  };
+
+  const handleLogin = () => {
+    console.log(isMail, isPhone, isPassword);
+    dispatch(actionRegisterUser(isMail));
   };
 
   return (
@@ -27,8 +61,9 @@ const Login = () => {
           <label>{isLogin ? 'Email' : 'Adresse e-mail'}</label>
           <input
             type='text'
-            className="login__input"
+            className={clsx(styles.login__input, isError && styles.login__input_error)}
             name="mail"
+            onChange={(e) => handleChangeInput(e, setIsMail)}
           />
         </fieldset>
         {!isLogin &&
@@ -38,6 +73,7 @@ const Login = () => {
               type='tel'
               className="login__input"
               name="tel"
+              onChange={(e) => handleChangeInput(e, setIsPhone)}
             />
           </fieldset>}
         <fieldset className={styles.login__password}>
@@ -64,8 +100,8 @@ const Login = () => {
               type={isVisiblePassword ? 'text' : 'password'}
               className="login__input"
               onChange={handleChangeInputPassword}
-              value={isPassword}
-              name="parol"
+              value={isPasswordCopy}
+              name="parolcopy"
               autoComplete="off"
             />
             <img
@@ -88,7 +124,7 @@ const Login = () => {
       </form>
       <div className={clsx(styles.login__container, styles.login__container_under)}>
         {isLogin && <span>Mot de passe oublié ?</span>}
-        <button className={styles.login__btn}>
+        <button className={styles.login__btn} onClick={handleLogin}>
           <span className={clsx(styles.login__btnSpan, isLogin ? styles.login__btnSpan_arrow : '')}>{isLogin ? 'Se connecter' : 'S’inscrire'}</span>
           <i className={styles.btn__icon} style={{ display: isLogin ? 'block' : 'none' }} />
         </button>
